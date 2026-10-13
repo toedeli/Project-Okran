@@ -29,7 +29,7 @@ okran-net join <host address>:7777 --install <Kenshi folder> --seconds 600 --ext
   at random per process; with them, two processes parted 9 ticks after the first move order.
 - The simulation has a fixed 1/60 s tick, one seeded random generator and no threads.
 
-## Results (2026-10-13, vanilla Kenshi data, zone 34.46 The Hub)
+## Results (2026-10-13, vanilla Kenshi data, zone 34.46, which is Mourn)
 
 | Test | Result |
 |-|-|
@@ -48,4 +48,5 @@ okran-net join <host address>:7777 --install <Kenshi folder> --seconds 600 --ext
 - Both player squads share the player faction, so one cannot attack the other.
 - Orders are direct calls in the app; multiplayer needs them as commands stamped with a tick.
 - Ragdolls run in the app's frame loop and write positions back into the simulation.
-- Lua scripts can call `math.random` and `os.time`, which would break lockstep.
+- Lua scripts are sandboxed (no `os`, `io` or `math.random`, see `src/mods/lib.rs`), but the game's own
+  seeded randomness is not offered to them yet.
