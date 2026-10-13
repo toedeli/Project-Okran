@@ -29,7 +29,7 @@ okran-net join <host address>:7777 --install <Kenshi folder> --seconds 600 --ext
   at random per process; with them, two processes parted 9 ticks after the first move order.
 - The simulation has a fixed 1/60 s tick, one seeded random generator and no threads.
 
-## Results (2026-10-14, vanilla Kenshi data, zone 34.46 The Hub)
+## Results (2026-10-13, vanilla Kenshi data, zone 34.46 The Hub)
 
 | Test | Result |
 |-|-|

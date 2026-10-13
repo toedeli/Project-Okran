@@ -14,7 +14,7 @@ against the original or an independent reader.
 | `textures <folder>` | Every DDS: format, decode, zstd size, lossless PNG check on a sample |
 | `world <Kenshi> [--heightmap out.png]` | The heightmap as 16-bit PNG; every Havok tagfile, Scythe `.phs` and PhysX NxuStream file through the readers |
 
-## Results (2026-10-14, a copy of the game folder and a 377-mod install)
+## Results (2026-10-13, a copy of the game folder and a 377-mod install)
 
 The game-folder copy is not pristine (it holds 110 more DXT5 textures than a clean install), so
 counts are this install's, not Kenshi's exact file list.
