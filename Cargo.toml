@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["src/io", "src/data", "src/anim", "src/world", "src/char", "src/combat", "src/render", "src/ai", "src/export", "src/game", "src/physics", "src/gui", "src/audio"]
+members = ["src/io", "src/data", "src/anim", "src/world", "src/char", "src/combat", "src/render", "src/ai", "src/export", "src/game", "src/physics", "src/gui", "src/audio", "src/mods"]
 
 [workspace.package]
 edition = "2024"

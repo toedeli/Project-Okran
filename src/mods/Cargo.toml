@@ -1,0 +1,18 @@
+[package]
+name = "kenshi-mods"
+version = "0.1.0"
+description = "Lua mods: scripts that hook the simulation, loaded at start-up without rebuilding the game"
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+kenshi-combat = { path = "../combat" }
+mlua = { version = "0.12.2", features = ["lua54", "vendored", "send"] }
+
+[dev-dependencies]
+kenshi-char = { path = "../char" }
+tempfile = "3.27.0"

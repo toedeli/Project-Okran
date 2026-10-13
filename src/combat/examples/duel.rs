@@ -36,6 +36,13 @@ fn main() {
         (x.parse().unwrap(), y.parse().unwrap())
     });
 
+    // Lua mods for the run: KENSHI_SCRIPTS = a folder of .lua files
+    if let Some(dir) = std::env::var_os("KENSHI_SCRIPTS") {
+        for line in kenshi_mods::install(std::path::Path::new(&dir)) {
+            eprintln!("{line}");
+        }
+    }
+
     let mut order = Install::new(&root).load_order().unwrap();
     order.files.retain(|f| f.core);
     let data = GameDataContainer::load(&order).unwrap();

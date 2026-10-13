@@ -231,6 +231,7 @@ pub fn resolve_hit(
     d.pierce *= ctx.damage_mult;
     d.stun *= ctx.damage_mult;
 
+    crate::hooks::on_hit(&mut crate::hooks::HitEvent { part: i, kind: m.parts[i].kind, toughness: stats.toughness, damage: &mut d });
     m.apply_damage(i, d, ctx.race_bleed, c);
     let wound = d.cut.max(d.pierce) * hc.bleed_rate * d.bleed;
     m.wounds.push(wound);

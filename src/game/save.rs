@@ -292,7 +292,7 @@ pub struct SavedPerson {
     pub dead: bool,
     pub inventory: Vec<SavedItem>,
     /// Its look (race, head, hair, clothes), when made in the editor.
-    pub look: Option<kenshi_render::character::CharacterSpec>,
+    pub look: Option<kenshi_char::look::CharacterSpec>,
     /// Its bounties (`law`).
     #[serde(default)]
     pub bounties: Vec<crate::law::Bounty>,
@@ -461,7 +461,7 @@ pub fn next_autosave(index: i32) -> (String, i32) {
 
 impl Sim {
     /// The state a save keeps. `look` gives a player character's look, if it has one.
-    pub fn snapshot(&self, zone: (i32, i32), look: impl Fn(usize) -> Option<kenshi_render::character::CharacterSpec>) -> SaveGame {
+    pub fn snapshot(&self, zone: (i32, i32), look: impl Fn(usize) -> Option<kenshi_char::look::CharacterSpec>) -> SaveGame {
         let players = self
             .folk
             .iter()
@@ -680,7 +680,7 @@ impl Sim {
     /// Put a save's state on this world: the time, the money, and the player's characters in
     /// order onto this world's player characters (as many as both have). Returns the
     /// characters restored, with their looks.
-    pub fn restore(&mut self, save: &SaveGame) -> Vec<(usize, Option<kenshi_render::character::CharacterSpec>)> {
+    pub fn restore(&mut self, save: &SaveGame) -> Vec<(usize, Option<kenshi_char::look::CharacterSpec>)> {
         if !save.people.is_empty() {
             return self.restore_world(save);
         }
@@ -790,7 +790,7 @@ impl Sim {
     /// A save with its people put on a world just built at its zone (`Sim::load`): its zones
     /// in their order without their people, then everyone under their own numbers, and the
     /// rest of the save. Returns the player's characters with their looks.
-    fn restore_world(&mut self, save: &SaveGame) -> Vec<(usize, Option<kenshi_render::character::CharacterSpec>)> {
+    fn restore_world(&mut self, save: &SaveGame) -> Vec<(usize, Option<kenshi_char::look::CharacterSpec>)> {
         // the zones, in their order, empty
         self.quiet_zones = true;
         let res = self.res.clone();

@@ -5,6 +5,7 @@ pub mod combat_speed;
 pub mod encumbrance;
 pub mod hunger;
 pub mod inventory;
+pub mod look;
 pub mod medical;
 pub mod quality;
 pub mod movement;

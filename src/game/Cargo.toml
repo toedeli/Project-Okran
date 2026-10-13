@@ -19,12 +19,20 @@ kenshi-char = { path = "../char" }
 kenshi-combat = { path = "../combat" }
 kenshi-ai = { path = "../ai" }
 kenshi-anim = { path = "../anim" }
-kenshi-render = { path = "../render" }
+kenshi-render = { path = "../render", optional = true }
 kenshi-physics = { path = "../physics" }
-kenshi-gui = { path = "../gui" }
+kenshi-gui = { path = "../gui", optional = true }
 kenshi-audio = { path = "../audio" }
-bevy = { version = "=0.19.1", features = ["dds"] }
+kenshi-mods = { path = "../mods" }
+bevy = { version = "=0.19.1", features = ["dds"], optional = true }
+
+# The playable app (Bevy, the renderer, the UI). Without it the crate is the simulation alone,
+# which any engine, a server or a test can drive.
+[features]
+default = ["app"]
+app = ["dep:bevy", "dep:kenshi-render", "dep:kenshi-gui"]
 
 [[bin]]
 name = "kenshi"
 path = "bin/kenshi.rs"
+required-features = ["app"]

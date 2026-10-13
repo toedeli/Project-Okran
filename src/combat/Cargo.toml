@@ -15,3 +15,6 @@ kenshi-data = { path = "../data" }
 kenshi-anim = { path = "../anim" }
 kenshi-io = { path = "../io" }
 
+
+[dev-dependencies]
+kenshi-mods = { path = "../mods" }

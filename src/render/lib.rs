@@ -10,7 +10,7 @@ pub mod mipmaps;
 pub mod moons;
 pub mod object_material;
 pub mod particles;
-pub mod prof;
+pub use kenshi_io::prof;
 pub mod ragdoll;
 pub mod reflection;
 pub mod shadows;

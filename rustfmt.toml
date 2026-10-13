@@ -1,0 +1,2 @@
+# Upstream does not run rustfmt; this keeps edits to the lines they change.
+disable_all_formatting = true

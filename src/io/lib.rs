@@ -11,5 +11,6 @@ pub mod ogre_mesh;
 pub mod ogre_skeleton;
 pub mod nxu;
 pub mod phs;
+pub mod prof;
 pub mod resources;
 pub mod tiff;

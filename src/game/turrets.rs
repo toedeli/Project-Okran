@@ -16,12 +16,11 @@ pub const GUNNER_REACH: f32 = 200.0;
 
 /// The pivot of a building's swivelling head: the offsets down to its first turning part.
 fn pivot(data: &GameDataContainer, b: &GameData) -> [f32; 3] {
-    kenshi_render::zone::part_meshes_placed(data, b, false)
+    kenshi_world::parts::part_chains(data, b, false)
         .into_iter()
         .find_map(|p| {
             let k = p.chain.iter().position(|(_, a)| a.is_some())?;
-            let v = p.chain[..=k].iter().fold(bevy::math::Vec3::ZERO, |s, (o, _)| s + *o);
-            Some([v.x, v.y, v.z])
+            Some(p.chain[..=k].iter().fold([0.0; 3], |s, (o, _)| [s[0] + o[0], s[1] + o[1], s[2] + o[2]]))
         })
         .unwrap_or([0.0, 10.0, 0.0])
 }

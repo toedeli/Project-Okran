@@ -3203,7 +3203,7 @@ impl Sim {
             advanced,
             ..
         } = self;
-        let mut prof = kenshi_render::prof::Marks::start();
+        let mut prof = kenshi_io::prof::Marks::start();
         let now = t as f64 / hour_secs;
         let positions: Vec<[f32; 3]> = folk.iter().map(|p| p.mover.position_units()).collect();
         let downs: Vec<bool> = folk.iter().map(|p| p.down).collect();

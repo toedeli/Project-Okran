@@ -342,6 +342,9 @@ fn main() -> AppExit {
         need_kenshi(&e);
         return AppExit::error();
     }
+    for line in kenshi_mods::install(&kenshi_io::cfg::user_dir().join("scripts")) {
+        eprintln!("{line}");
+    }
     // with no zone or squads asked for, Kenshi's main menu starts the game
     let menu = args.len() <= 1;
     let zone_xy: (i32, i32) = args

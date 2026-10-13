@@ -73,6 +73,20 @@ New models and textures that your `.mod` points to by path also work, like in Ke
 Start Project Okran from a terminal to see what it loaded. A mod in the list that isn't found is
 reported as missing.
 
+### Lua scripts: changing how the game plays
+
+A Lua script changes the game's rules without rebuilding it. Put `.lua` files in
+`%APPDATA%\kenshi-rewrite\scripts\` and start the game; the terminal lists each script it loaded.
+Scripts run in file-name order, and a script with an error is reported and skipped.
+
+A script hooks the game by defining a function with the hook's name. There is one hook so far:
+
+- `on_hit(hit)` runs for every blow, after armour and toughness, before the body part takes it.
+  Change `hit.cut`, `hit.blunt`, `hit.pierce`, `hit.stun` or `hit.bleed`; read `hit.kind`
+  (`"torso"`, `"leg"`, `"arm"` or `"head"`), `hit.part` and `hit.toughness`.
+
+`src/mods/scripts/headshots.lua` is an example: head hits do three times the damage.
+
 ## 3. Changing the code
 
 Everything is in this repository, in Rust with [Bevy](https://bevyengine.org). Fork it, change it
@@ -98,6 +112,11 @@ The code is split into crates under `src/`, each one part of the game:
 | `src/gui` | Kenshi's menus and windows (its MyGUI layouts) |
 | `src/audio` | Kenshi's sounds |
 | `src/game` | The simulation (`sim.rs`, `world.rs`, `law.rs`, `slavery.rs`, `dialogue.rs`, `save.rs`...) and the playable app (`bin/kenshi.rs` and its `*_ui.rs` windows) |
+| `src/mods` | Lua scripts and the hooks they fill |
+
+The simulation builds without Bevy, the renderer or the UI: `cargo build -p kenshi-game
+--no-default-features` gives the game's rules alone, which a server, a test or another engine can
+drive (`--example town` runs a town headless).
 
 Good places to start:
 

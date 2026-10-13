@@ -10,6 +10,7 @@ pub mod attack;
 pub mod engage;
 pub mod fighter;
 pub mod hit;
+pub mod hooks;
 pub mod melee;
 pub mod ranged;
 pub mod states;

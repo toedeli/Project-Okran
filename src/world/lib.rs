@@ -12,6 +12,7 @@ pub mod interior;
 pub mod navmesh;
 pub mod navcut;
 pub mod nodes;
+pub mod parts;
 pub mod longpath;
 pub mod resources;
 pub mod terrain_biome;

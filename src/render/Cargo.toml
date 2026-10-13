@@ -34,6 +34,7 @@ serde = { version = "1", features = ["derive"] }
 kenshi-io = { path = "../io" }
 kenshi-data = { path = "../data" }
 kenshi-anim = { path = "../anim" }
+kenshi-char = { path = "../char" }
 kenshi-world = { path = "../world" }
 kenshi-combat = { path = "../combat" }
 kenshi-physics = { path = "../physics" }

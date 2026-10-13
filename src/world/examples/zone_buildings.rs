@@ -1,7 +1,7 @@
 //! A zone's placed buildings: name, position, destroyed flag, whether it has a "destroyed mesh":
 //! `cargo run -p kenshi-world --example zone_buildings -- <install> X Y [filter]`
 use kenshi_data::GameDataContainer;
-use kenshi_io::{fcs, mods::Install};
+use kenshi_io::mods::Install;
 use std::path::Path;
 
 fn main() {
