@@ -1,5 +1,5 @@
 //! DirectDraw Surface textures (public format): header parsing and CPU decoding of the top mip level
-//! for DXT1/DXT3/DXT5 (BC1/2/3) and uncompressed 32-bit RGBA/BGRA. Used where a texture's channels
+//! for DXT1/DXT3/DXT5 (BC1/2/3) and uncompressed 16, 24 and 32-bit colour. Used where a texture's channels
 //! must be repacked before rendering (e.g. Kenshi's hair "Mod" maps); plain textures go to the GPU
 //! compressed through the renderer's own loader.
 

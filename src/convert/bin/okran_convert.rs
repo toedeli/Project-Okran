@@ -58,8 +58,9 @@ enum Job {
         #[arg(long)]
         write: Option<PathBuf>,
     },
-    /// The world's files: the heightmap as a 16-bit PNG (checked pixel for pixel), and every Havok
-    /// navmesh tile and PhysX file through the readers.
+    /// The world's files: the heightmap as a 16-bit PNG (checked pixel for pixel), every Havok
+    /// tagfile and Scythe .phs file, and every PhysX NxuStream collision file (XML read, binary
+    /// counted as not read).
     World {
         /// The Kenshi folder.
         install: PathBuf,
@@ -358,11 +359,13 @@ fn world(install: &Path, heightmap: Option<&Path>) {
         std::fs::write(out, &png).expect("write");
     }
     let mut files = vec![];
-    collect(&install.join("data"), &["hkt".to_string(), "phs".to_string(), "nxu".to_string()], &mut files);
-    let (mut hkt, mut hkt_ok, mut phs, mut phs_ok, mut nxu, mut nxu_ok) = (0, 0, 0, 0, 0, 0);
+    collect(&install.join("data"), &["hkt".to_string(), "phs".to_string(), "xml".to_string(), "bin".to_string()], &mut files);
+    let (mut hkt, mut hkt_ok, mut phs, mut phs_ok, mut xml, mut xml_ok, mut bin) = (0, 0, 0, 0, 0, 0, 0);
     let mut fails = vec![];
     for p in &files {
         let ext = p.extension().map(|e| e.to_string_lossy().to_lowercase()).unwrap_or_default();
+        let head: Vec<u8> = std::fs::read(p).map(|b| b.into_iter().take(256).collect()).unwrap_or_default();
+        let nxu = head.windows(9).any(|w| w == b"NXUSTREAM");
         let ok: Result<(), String> = match ext.as_str() {
             "hkt" => {
                 hkt += 1;
@@ -372,21 +375,26 @@ fn world(install: &Path, heightmap: Option<&Path>) {
                 phs += 1;
                 kenshi_io::phs::read(p).map(|_| ()).map_err(|e| e.to_string())
             }
-            _ => {
-                nxu += 1;
-                kenshi_io::nxu::read(p).map(|_| ()).map_err(|e| e.to_string())
+            "xml" if nxu => {
+                xml += 1;
+                kenshi_io::nxu::read(p).map_err(|e| e.to_string()).and_then(|shapes| if shapes.is_empty() { Err("no shapes".into()) } else { Ok(()) })
             }
+            "bin" if nxu => {
+                bin += 1;
+                continue;
+            }
+            _ => continue,
         };
         match ok {
             Ok(()) => match ext.as_str() {
                 "hkt" => hkt_ok += 1,
                 "phs" => phs_ok += 1,
-                _ => nxu_ok += 1,
+                _ => xml_ok += 1,
             },
             Err(e) => fails.push(format!("{}: {e}", p.display())),
         }
     }
-    println!("Havok navmesh and other tagfiles: {hkt_ok} of {hkt} read; PhysX .phs: {phs_ok} of {phs}; PhysX .nxu: {nxu_ok} of {nxu}");
+    println!("Havok tagfiles: {hkt_ok} of {hkt} read; Scythe .phs: {phs_ok} of {phs}; PhysX NxuStream XML: {xml_ok} of {xml} read with shapes; PhysX NxuStream binary: {bin} found, no reader yet");
     for f in fails.iter().take(8) {
         println!("  not read: {f}");
     }

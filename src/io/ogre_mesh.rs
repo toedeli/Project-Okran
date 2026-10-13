@@ -392,7 +392,10 @@ fn mesh(r: &mut Reader, c: &Chunk, version: String) -> Result<Mesh, Error> {
             // v1.41/v1.8 store a wrong MESH_LOD length; read its header fields and skip each
             // LOD_USAGE child by its (correct) length. v1.100's layout differs but its lengths hold.
             chunk::MESH_LOD if !m.version.contains("v1.100") => {
-                r.line("lod strategy")?;
+                // v1.41 and v1.8 name the LOD strategy first; v1.4 and older do not
+                if m.version.contains("v1.41") || m.version.contains("v1.8") {
+                    r.line("lod strategy")?;
+                }
                 r.u16("lod level count")?;
                 r.u8("lod manual")?;
                 while let Some(u) = r.child(&[chunk::MESH_LOD_USAGE])? {

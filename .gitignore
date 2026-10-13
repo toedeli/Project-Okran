@@ -12,3 +12,6 @@ dist/
 target/
 /exports/
 shots/
+
+# reports made from this repo, kept out of git
+/report/
