@@ -12,7 +12,6 @@ path = "lib.rs"
 [dependencies]
 serde = { version = "1", features = ["derive"] }
 kenshi-data = { path = "../data" }
+kenshi-io = { path = "../io" }
 kenshi-world = { path = "../world" }
 
-[dev-dependencies]
-kenshi-io = { path = "../io" }

@@ -11,7 +11,7 @@
 
 use crate::ZONE_FOLDERS;
 use kenshi_data::{GameDataContainer, ItemType};
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 use std::path::Path;
 
 /// One placed town.
@@ -75,7 +75,7 @@ impl Town {
 
 /// Every town the level files place, keyed by record (the last folder wins).
 pub fn towns(install: &Path, data: &GameDataContainer) -> Vec<Town> {
-    let mut by: HashMap<String, Town> = HashMap::new();
+    let mut by: HashMap<String, Town> = HashMap::default();
     for f in ZONE_FOLDERS {
         let p = install
             .join("data/newland/leveldata")

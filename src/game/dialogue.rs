@@ -24,19 +24,19 @@ pub const T_ME: i32 = 0;
 /// limit"), its "chance permanent" rolled once, and the dialogue running.
 #[derive(Debug, Clone, Default)]
 pub struct DialogMemory {
-    pub unlocked: std::collections::HashSet<(usize, String)>,
-    pub locked: std::collections::HashSet<(usize, String)>,
-    pub spoken: std::collections::HashMap<(usize, String), f64>,
-    pub has: std::collections::HashMap<(usize, String), bool>,
-    pub running: std::collections::HashMap<usize, String>,
+    pub unlocked: kenshi_io::det::HashSet<(usize, String)>,
+    pub locked: kenshi_io::det::HashSet<(usize, String)>,
+    pub spoken: kenshi_io::det::HashMap<(usize, String), f64>,
+    pub has: kenshi_io::det::HashMap<(usize, String), bool>,
+    pub running: kenshi_io::det::HashMap<usize, String>,
     /// When each NPC last met each of the player's characters (game hours): DC_MET_TARGET_BEFORE,
     /// DC_TARGET_LAST_SEEN_X_HOURS_AGO, DA_REMEMBER_CHARACTER.
-    pub met: std::collections::HashMap<(usize, usize), f64>,
+    pub met: kenshi_io::det::HashMap<(usize, usize), f64>,
     /// Whom each NPC in a conversation talks to.
-    pub partner: std::collections::HashMap<usize, usize>,
+    pub partner: kenshi_io::det::HashMap<usize, usize>,
     /// What each person remembers of another (CharacterPerceptionTags_LongTerm, a bit each):
     /// (who, of whom) -> tags. DC_HAS_TAG.
-    pub tags: std::collections::HashMap<(usize, usize), u32>,
+    pub tags: kenshi_io::det::HashMap<(usize, usize), u32>,
 }
 
 /// CharacterPerceptionTags_LongTerm.

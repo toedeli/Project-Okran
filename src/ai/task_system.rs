@@ -379,7 +379,7 @@ pub fn goal_score<A: Agent>(a: &mut A, t: &Task<A::Target>) -> f32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::collections::HashMap;
+    use kenshi_io::det::HashMap;
 
     struct Toy {
         conditions: HashMap<u16, bool>,
@@ -437,7 +437,7 @@ mod tests {
     fn earlier_goals_rank_first_and_idle_is_the_fallback() {
         // not at the place the move order is for: it is not done yet
         let mut m = Toy {
-            conditions: HashMap::from([(1, false)]),
+            conditions: [(1, false)].into_iter().collect(),
             free: true,
         };
         let mut s = TaskSystem::new(0u32, [0.0; 3]);
@@ -451,7 +451,7 @@ mod tests {
     #[test]
     fn without_free_will_only_urgent_goals() {
         let mut m = Toy {
-            conditions: HashMap::new(),
+            conditions: HashMap::default(),
             free: false,
         };
         let mut s = TaskSystem::new(0u32, [0.0; 3]);

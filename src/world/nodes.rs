@@ -6,7 +6,7 @@
 use crate::{Placement, ZONE_FOLDERS};
 use kenshi_data::{GameData, GameDataContainer, ItemType};
 use kenshi_io::fcs::{self, Instance};
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 use std::path::Path;
 
 /// Furnishing layouts (`interiors.level`, kind-30 records): (building string id, layout name)
@@ -24,7 +24,7 @@ impl Layouts {
                 .iter()
                 .map(|f| dir.join(f).join("interiors.level")),
         );
-        let mut m = HashMap::new();
+        let mut m = HashMap::default();
         for f in files.filter(|f| f.is_file()) {
             let Ok(file) = fcs::read(&f) else { continue };
             for r in file.records.into_iter().filter(|r| r.kind == 30) {

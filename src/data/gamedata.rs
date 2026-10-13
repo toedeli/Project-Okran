@@ -13,7 +13,7 @@
 use crate::ItemType;
 use kenshi_io::fcs;
 use kenshi_io::mods::LoadOrder;
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 
 /// T00003 datatype bit 0: the record modifies an existing one.
 pub const DATATYPE_MODIFIES: u32 = 0x1;

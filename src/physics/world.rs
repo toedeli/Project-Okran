@@ -2,7 +2,7 @@
 //! parts' "xml collision", PhysX NxuStream2 shapes) and the people standing about.
 use glam::{Affine3A, Mat3, Vec3, Vec3A};
 use kenshi_io::nxu::{Shape, ShapeKind};
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 use std::sync::Arc;
 
 /// A solid in its own frame.
@@ -72,7 +72,7 @@ impl TriMesh {
         let c1 = (((p.x + r - self.lo.x) / self.cell) as i32).clamp(0, self.cols - 1);
         let r0 = (((p.z - r - self.lo.z) / self.cell) as i32).clamp(0, self.rows - 1);
         let r1 = (((p.z + r - self.lo.z) / self.cell) as i32).clamp(0, self.rows - 1);
-        let mut seen = std::collections::HashSet::new();
+        let mut seen = kenshi_io::det::HashSet::default();
         let mut out = Vec::new();
         for row in r0..=r1 {
             for col in c0..=c1 {

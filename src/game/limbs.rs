@@ -100,7 +100,7 @@ impl Sim {
 
     /// Person `id`'s skill multipliers from their robotic limbs.
     pub(crate) fn limb_mults(&mut self, id: usize) {
-        let mut sum: std::collections::HashMap<StatsEnumerated, f32> = std::collections::HashMap::new();
+        let mut sum: kenshi_io::det::HashMap<StatsEnumerated, f32> = kenshi_io::det::HashMap::default();
         for slot in 0..4 {
             let ms = self.folk[id].limbs[slot].as_ref().and_then(|it| self.data.get(&it.record)).map(limb_mults);
             for s in [

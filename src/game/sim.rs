@@ -70,7 +70,7 @@ use kenshi_world::navmesh::{METRES, NavWorld, PathManager, tile_of};
 use kenshi_world::nodes::{Layouts, NODE_GENERAL, NODE_GUARDPOST, NODE_SHOPKEEPER, Node, nodes};
 use kenshi_world::town::{Town, current_town, towns};
 use kenshi_world::{Terrain, placements};
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 use std::path::Path;
 use std::sync::atomic::Ordering;
 
@@ -279,7 +279,7 @@ impl DoorState {
 #[derive(Debug, Default)]
 pub struct BarState {
     pub bar: Option<usize>,
-    pub held: std::collections::HashMap<usize, usize>,
+    pub held: kenshi_io::det::HashMap<usize, usize>,
 }
 
 pub struct Lcg(pub u64);
@@ -1030,14 +1030,14 @@ pub struct Sim {
     pub nests: Vec<crate::nests::Nest>,
     /// The zones whose buildings and residents are in (the first one's from `load`), in the
     /// order they came in (their placements', furniture's and nodes' indices follow it).
-    pub zones: std::collections::HashSet<(i32, i32)>,
+    pub zones: kenshi_io::det::HashSet<(i32, i32)>,
     pub zone_order: Vec<(i32, i32)>,
     /// Where each zone's placements start among `placed` (a zone's building n is placement
     /// offset + n).
-    pub zone_offsets: std::collections::HashMap<(i32, i32), usize>,
+    pub zone_offsets: kenshi_io::det::HashMap<(i32, i32), usize>,
     /// The barriers' owners numbered (crate::doors), each door's barrier (gates only) and each
     /// barrier's door.
-    pub faction_numbers: std::collections::HashMap<String, u32>,
+    pub faction_numbers: kenshi_io::det::HashMap<String, u32>,
     pub barrier_of: Vec<Option<usize>>,
     pub barrier_door: Vec<usize>,
     /// Buildings dismantled so far (for the sound), and whether the player's buildings changed
@@ -1061,7 +1061,7 @@ pub struct Sim {
     pub advanced: crate::advanced::Advanced,
     /// (looter, target) pairs done: the looter's memory of having looted them (tag 6,
     /// TARGET_HAS_BEEN_LOOTED).
-    pub looted_by: std::collections::HashSet<(usize, usize)>,
+    pub looted_by: kenshi_io::det::HashSet<(usize, usize)>,
     /// The player's buildings (`base`).
     pub buildings: Vec<crate::base::PlayerBuilding>,
     /// The RESEARCH records done.
@@ -1125,7 +1125,7 @@ pub struct Sim {
     /// Items on the ground (`loot`), the next one's number, and the towns whose loot is out.
     pub ground: Vec<crate::loot::GroundItem>,
     pub next_ground: u64,
-    pub looted: std::collections::HashSet<String>,
+    pub looted: kenshi_io::det::HashSet<String>,
     /// The containers of the towns and ruins loaded, and what is in them (`loot`).
     pub boxes: Vec<crate::loot::WorldBox>,
     /// Saved containers' contents waiting for their zone (`loot::refill_boxes`).
@@ -1136,7 +1136,7 @@ pub struct Sim {
     /// who was down at the last speech tick.
     pub bark_next: HashMap<usize, f64>,
     pub seen_player: HashMap<usize, f64>,
-    pub was_down: std::collections::HashSet<usize>,
+    pub was_down: kenshi_io::det::HashSet<usize>,
     /// Effects of NPC lines run on inside a conversation step.
     pub pending_effects: Vec<crate::dialogue::Effect>,
     pub price_c: crate::trade::PriceConstants,
@@ -1957,7 +1957,7 @@ impl Sim {
         let mut sim = Sim {
             data: data_arc.clone(),
             res: std::sync::Arc::new(res),
-            animal_clips: HashMap::new(),
+            animal_clips: HashMap::default(),
             install: install.to_path_buf(),
             general,
             approach,
@@ -2019,13 +2019,13 @@ impl Sim {
             pending_world: None,
             layouts: None,
             money,
-            met: HashMap::new(),
+            met: HashMap::default(),
             pick_events: Vec::new(),
             prospectors: Vec::new(),
             trainees: Vec::new(),
             prospect_result: None,
-            cage_reach: HashMap::new(),
-            machine_stock: HashMap::new(),
+            cage_reach: HashMap::default(),
+            machine_stock: HashMap::default(),
             slave_squads: kits.iter().filter(|(_, t)| data_arc.get(t).is_some_and(|r| !r.refs("slaves").is_empty())).cloned().collect(),
             dialog_memory: Default::default(),
             mem_down: Vec::new(),
@@ -2037,8 +2037,8 @@ impl Sim {
             boxes: Vec::new(),
             saved_boxes: Vec::new(),
             artifacts: None,
-            bark_next: HashMap::new(),
-            seen_player: HashMap::new(),
+            bark_next: HashMap::default(),
+            seen_player: HashMap::default(),
             was_down: Default::default(),
             pending_effects: Vec::new(),
             price_c: crate::trade::PriceConstants::load(&data_arc),
@@ -4861,7 +4861,7 @@ impl Sim {
             return;
         };
         // standing squads per zone (their leader's zone)
-        let mut count: HashMap<(i32, i32), f32> = HashMap::new();
+        let mut count: HashMap<(i32, i32), f32> = HashMap::default();
         pop.squads
             .retain(|(m, _, _)| m.iter().any(|&i| !self.folk[i].down));
         for (m, _, _) in &pop.squads {

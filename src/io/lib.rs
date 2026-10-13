@@ -2,6 +2,7 @@
 //! runtime; nothing is converted or shipped.
 
 pub mod dds;
+pub mod det;
 pub mod cfg;
 pub mod fcs;
 pub mod hkt;

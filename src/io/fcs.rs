@@ -87,12 +87,12 @@ pub struct File {
     /// The file ends with the list, even an empty one.
     pub has_trailer: bool,
     /// Strings that were stored as Latin-1 (not valid UTF-8), written back that way.
-    pub latin1: std::collections::HashSet<String>,
+    pub latin1: crate::det::HashSet<String>,
 }
 
 thread_local! {
     /// The strings the parse under way decoded from Latin-1.
-    static LATIN1_SEEN: std::cell::RefCell<std::collections::HashSet<String>> = Default::default();
+    static LATIN1_SEEN: std::cell::RefCell<crate::det::HashSet<String>> = Default::default();
 }
 
 #[derive(Debug, Clone, PartialEq)]

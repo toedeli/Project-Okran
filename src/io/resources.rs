@@ -3,7 +3,7 @@
 //! `character/skins/hu/heads/x.dds` when the file is in `character/skins/human_male/`). Stored paths
 //! are tried first; otherwise the file name is looked up.
 
-use std::collections::HashMap;
+use crate::det::HashMap;
 use std::path::{Path, PathBuf};
 
 pub struct Resources {
@@ -11,7 +11,7 @@ pub struct Resources {
     /// lowercase file name -> path relative to `root`, first found in sorted directory order
     by_name: HashMap<String, PathBuf>,
     /// The names an enabled mod has its own file for (found before the stored paths).
-    overridden: std::collections::HashSet<String>,
+    overridden: crate::det::HashSet<String>,
 }
 
 /// A game-data path (`.\data\x\y.dds`) -> relative path with forward slashes (`data/x/y.dds`).
@@ -26,12 +26,12 @@ impl Resources {
     /// Index every file under `<root>/data`.
     pub fn index(root: impl Into<PathBuf>) -> Self {
         let root = root.into();
-        let mut by_name = HashMap::new();
-        let mut overridden = std::collections::HashSet::new();
+        let mut by_name = HashMap::default();
+        let mut overridden = crate::det::HashSet::default();
         walk(&root, Path::new("data"), &mut by_name);
         // the enabled mods' files over the game's, the last mod winning
         for dir in crate::mods::Install::new(&root).mod_dirs() {
-            let mut theirs = HashMap::new();
+            let mut theirs = HashMap::default();
             match dir.strip_prefix(&root) {
                 Ok(rel) => walk(&root, rel, &mut theirs),
                 Err(_) => walk(&dir, Path::new(""), &mut theirs),

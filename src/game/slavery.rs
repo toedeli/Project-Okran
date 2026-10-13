@@ -144,7 +144,7 @@ impl Sim {
         if self.shackles_lock(id).is_some() {
             return 1.0;
         }
-        let slave_clothes: std::collections::HashSet<&String> = self
+        let slave_clothes: kenshi_io::det::HashSet<&String> = self
             .data
             .of_type(kenshi_data::ItemType::Faction)
             .flat_map(|f| f.refs("slave clothing").iter().map(|(s, _)| s))

@@ -14,7 +14,7 @@
 //! 0.1 m.
 
 use crate::navmesh::{Edge, FACE_BLOCKED, Face, FaceRef, NavWorld, Section, grid_cell, tile_of, tile_uid};
-use std::collections::{HashMap, HashSet};
+use kenshi_io::det::{HashMap, HashSet};
 
 /// Added to a ground section's uid for its cut pieces' section.
 pub const CUT_UID: i64 = 1 << 40;
@@ -191,7 +191,7 @@ impl NavWorld {
         for c in &mut cutters {
             c.group += base;
         }
-        let mut touched = HashSet::new();
+        let mut touched = HashSet::default();
         if std::env::var("KENSHI_NAV_DEBUG").is_ok() {
             let mut big: Vec<(f32, f32, f32, [f32; 2])> = cutters.iter().map(|c| (area(&c.outline), c.lo, c.hi, c.min)).collect();
             big.sort_by(|a, b| b.0.total_cmp(&a.0));
@@ -228,7 +228,7 @@ impl NavWorld {
     pub fn remove_cutters(&mut self, key: (i64, i64)) {
         self.cut_keys.remove(&key);
         let Some(ids) = self.key_cutters.remove(&key) else { return };
-        let mut touched = HashSet::new();
+        let mut touched = HashSet::default();
         for i in ids {
             let c = &mut self.cutters[i];
             for p in [[c.min[0], 0.0, c.min[1]], [c.max[0], 0.0, c.max[1]], [c.min[0], 0.0, c.max[1]], [c.max[0], 0.0, c.min[1]]] {
@@ -256,7 +256,7 @@ impl NavWorld {
     /// baked with them (a hole in the ground, their own navmesh) and are not cut again.
     fn bare_parts(&self, ground: &Section) -> HashSet<u32> {
         // the section's faces as loaded, by 4 m cell
-        let mut cells: HashMap<(i32, i32), Vec<u32>> = HashMap::new();
+        let mut cells: HashMap<(i32, i32), Vec<u32>> = HashMap::default();
         let (mut lo, mut hi) = ([f32::MAX; 2], [f32::MIN; 2]);
         for fi in 0..ground.faces.len() as u32 {
             if ground.faces[fi as usize].kind == FACE_BLOCKED {
@@ -277,7 +277,7 @@ impl NavWorld {
             }
         }
         if lo[0] > hi[0] {
-            return HashSet::new();
+            return HashSet::default();
         }
         let over = |x: f32, z: f32| {
             cells.get(&((x / 4.0).floor() as i32, (z / 4.0).floor() as i32)).into_iter().flatten().any(|&fi| {
@@ -286,7 +286,7 @@ impl NavWorld {
                 s.iter().all(|&v| v >= 0.0) || s.iter().all(|&v| v <= 0.0)
             })
         };
-        let mut tally: HashMap<u32, (u32, u32)> = HashMap::new();
+        let mut tally: HashMap<u32, (u32, u32)> = HashMap::default();
         for i in self.cutters_near(lo, hi) {
             let c = &self.cutters[i];
             let (x, z) = ((c.min[0] + c.max[0]) * 0.5, (c.min[1] + c.max[1]) * 0.5);
@@ -301,14 +301,14 @@ impl NavWorld {
         }
         // a part with a navmesh of its own (a building section over it: its floors, doors and
         // stairs, baked with it) is never cut round
-        let mut boxes: HashMap<u32, ([f32; 2], [f32; 2])> = HashMap::new();
+        let mut boxes: HashMap<u32, ([f32; 2], [f32; 2])> = HashMap::default();
         for i in self.cutters_near(lo, hi) {
             let c = &self.cutters[i];
             let b = boxes.entry(c.group).or_insert((c.min, c.max));
             b.0 = [b.0[0].min(c.min[0]), b.0[1].min(c.min[1])];
             b.1 = [b.1[0].max(c.max[0]), b.1[1].max(c.max[1])];
         }
-        let mut own: HashMap<(i32, i32), Vec<[f32; 3]>> = HashMap::new();
+        let mut own: HashMap<(i32, i32), Vec<[f32; 3]>> = HashMap::default();
         for sec in self.sections.values().filter(|s| s.info.is_some()) {
             for v in &sec.vertices {
                 if v[0] >= lo[0] - 50.0 && v[0] <= hi[0] + 50.0 && v[2] >= lo[1] - 50.0 && v[2] <= hi[1] + 50.0 {
@@ -406,7 +406,7 @@ impl NavWorld {
         // each face less the cutters standing on it
         let mut pieces: Vec<(u32, Vec<[f32; 3]>)> = Vec::new();
         let mut cut: Vec<u32> = Vec::new();
-        let mut by_group: HashMap<u32, (u32, [f32; 2])> = HashMap::new();
+        let mut by_group: HashMap<u32, (u32, [f32; 2])> = HashMap::default();
         for fi in 0..ground.faces.len() as u32 {
             let face = ground.faces[fi as usize];
             if face.kind == FACE_BLOCKED {
@@ -499,7 +499,7 @@ impl NavWorld {
         }
         // the pieces' links: to each other, and to the faces round them in any section
         let edge_face: Vec<u32> = overlay_sec.faces.iter().enumerate().flat_map(|(k, f)| std::iter::repeat_n(k as u32, f.num_edges as usize)).collect();
-        let mut by_cell: HashMap<(i32, i32), Vec<u32>> = HashMap::new();
+        let mut by_cell: HashMap<(i32, i32), Vec<u32>> = HashMap::default();
         for (k, e) in overlay_sec.edges.iter().enumerate() {
             let (a, b) = (overlay_sec.vertices[e.a as usize], overlay_sec.vertices[e.b as usize]);
             for gx in grid_cell(a[0].min(b[0]))..=grid_cell(a[0].max(b[0])) {
@@ -521,7 +521,7 @@ impl NavWorld {
         for (k, e) in overlay_sec.edges.iter().enumerate() {
             let k = k as u32;
             let (a, b) = (overlay_sec.vertices[e.a as usize], overlay_sec.vertices[e.b as usize]);
-            let mut seen = HashSet::new();
+            let mut seen = HashSet::default();
             for gx in grid_cell(a[0].min(b[0]))..=grid_cell(a[0].max(b[0])) {
                 for gz in grid_cell(a[2].min(b[2]))..=grid_cell(a[2].max(b[2])) {
                     // the other pieces
@@ -649,7 +649,7 @@ impl NavWorld {
     pub fn check_cutters(&self, x: f32, z: f32, reach: f32, ground: &dyn Fn(f32, f32) -> f32) -> (usize, usize, usize) {
         let (mut asked, mut found, mut through) = (0, 0, 0);
         // the parts that cut (on bare ground), by their ground section
-        let mut bare: HashMap<i64, HashSet<u32>> = HashMap::new();
+        let mut bare: HashMap<i64, HashSet<u32>> = HashMap::default();
         for i in self.cutters_near([x - reach, z - reach], [x + reach, z + reach]) {
             let c = &self.cutters[i];
             let a = area(&c.outline);
@@ -725,7 +725,7 @@ impl NavWorld {
     /// (testing) Faces reached from `f` across edges (any, up to `max`), and how many of `f`'s
     /// own edges lead anywhere.
     pub fn flood(&self, f: FaceRef, max: usize) -> (usize, usize) {
-        let mut seen = HashSet::from([f]);
+        let mut seen = [f].into_iter().collect::<HashSet<_>>();
         let mut stack = vec![f];
         while let Some(g) = stack.pop() {
             if seen.len() >= max {

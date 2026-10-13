@@ -12,7 +12,7 @@
 //! else its second (assumption); weapon manufacturers are not picked. Town wealth is 1.
 use kenshi_char::inventory::{Inventory, Item, Section};
 use kenshi_data::{GameData, GameDataContainer, ItemType};
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 
 /// The trader window's grid: its slot panel (Kenshi_InventoryTraderWindow.layout's
 /// backpack_content, 455 x 486 design pixels) in Kenshi_InventorySlotSkin's 25-pixel cells, the
@@ -73,7 +73,7 @@ impl TradePrices {
     pub fn roll(data: &GameDataContainer, towns: &[[f32; 3]], margins: f32, rand: &mut dyn FnMut() -> f32) -> TradePrices {
         let list = data.records.values().find(|r| r.item_type() == Some(ItemType::VendorList) && r.name == "all trade goods");
         let goods: Vec<String> = list.map(|l| l.refs("items").iter().map(|(s, _)| s.clone()).collect()).unwrap_or_default();
-        let mut factor = HashMap::new();
+        let mut factor = HashMap::default();
         for (t, at) in towns.iter().enumerate() {
             for g in &goods {
                 let mut f = 1.0 - margins + rand() * 2.0 * margins;
@@ -282,7 +282,7 @@ mod tests {
         let p = TradePrices::roll(&data, &[[0.0; 3], [1000.0, 0.0, 0.0]], 0.3, &mut || 0.5);
         assert_eq!(p.at(Some(0), "x"), 1.0);
         // the clamp: a town 100 000 units off may differ by at most 0.3
-        let mut t = TradePrices { goods: vec!["g".into()], factor: HashMap::new() };
+        let mut t = TradePrices { goods: vec!["g".into()], factor: HashMap::default() };
         t.factor.insert((0, "g".into()), 0.7);
         let reach: f32 = 100_000.0 / 1.0e6 * 0.3 * 10.0;
         assert!((reach - 0.3).abs() < 1e-6);

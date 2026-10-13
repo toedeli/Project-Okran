@@ -41,7 +41,7 @@ const TILE: u32 = 64;
 pub struct Terrain {
     map: Tiff,
     /// Heightmap tiles read so far ([`Terrain::height_at`]).
-    tiles: std::collections::HashMap<(u32, u32), Vec<u16>>,
+    tiles: kenshi_io::det::HashMap<(u32, u32), Vec<u16>>,
 }
 
 /// A rectangular patch of heights, `w` x `h` samples spaced `spacing` units apart, starting at
@@ -335,7 +335,7 @@ impl Terrain {
     pub fn open(install: &Path) -> Result<Self, Error> {
         Ok(Terrain {
             map: Tiff::open(&install.join(HEIGHTMAP))?,
-            tiles: std::collections::HashMap::new(),
+            tiles: kenshi_io::det::HashMap::default(),
         })
     }
 

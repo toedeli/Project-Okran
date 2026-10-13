@@ -81,7 +81,7 @@ impl Sim {
     /// threaten them.
     pub fn speech_tick(&mut self) {
         // getting up after a knockout: a fight still on near them, or not
-        let down: std::collections::HashSet<usize> = self.folk.iter().filter(|p| p.down && !p.dead).map(|p| p.id).collect();
+        let down: kenshi_io::det::HashSet<usize> = self.folk.iter().filter(|p| p.down && !p.dead).map(|p| p.id).collect();
         let got_up: Vec<usize> = self.was_down.difference(&down).copied().filter(|&i| i < self.folk.len() && !self.folk[i].dead).collect();
         self.was_down = down;
         for id in got_up {

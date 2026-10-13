@@ -20,3 +20,6 @@ path = "bin/meshdump.rs"
 [[bin]]
 name = "skeldump"
 path = "bin/skeldump.rs"
+
+[dependencies]
+rustc-hash = "2.1.3"

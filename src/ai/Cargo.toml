@@ -11,6 +11,7 @@ path = "lib.rs"
 
 [dependencies]
 kenshi-data = { path = "../data" }
+kenshi-io = { path = "../io" }
 
 [dev-dependencies]
 kenshi-io = { path = "../io" }

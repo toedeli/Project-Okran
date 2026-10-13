@@ -42,7 +42,7 @@ use kenshi_char::stats::{CombatEvent, CombatTraining, Skills, XpConstants};
 use kenshi_char::{Constants as MedConstants, Medical, Stats, StatsEnumerated};
 use kenshi_data::{GameData, GameDataContainer, ItemType};
 use kenshi_io::{ogre_mesh, ogre_skeleton, resources::Resources};
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 /// Fighters, what they share, and their animation layers.

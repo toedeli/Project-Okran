@@ -28,7 +28,8 @@
 
 use kenshi_io::hkt::{self, Tagfile};
 use std::cmp::Ordering;
-use std::collections::{BinaryHeap, HashMap, HashSet};
+use std::collections::BinaryHeap;
+use kenshi_io::det::{HashMap, HashSet};
 use std::path::Path;
 
 use crate::{WORLD_SIZE, ZONE_SIZE};
@@ -287,7 +288,7 @@ fn section(
             .map_err(|_| missing("uid"))?,
         (None, None) => tile_uid(x, y),
     };
-    let mut links: HashMap<u32, Vec<(i64, u32, u32)>> = HashMap::new();
+    let mut links: HashMap<u32, Vec<(i64, u32, u32)>> = HashMap::default();
     for set in &sets {
         let other = set.int("oppositeUid");
         for c in set
@@ -648,7 +649,7 @@ pub const MAX_ITERATIONS: usize = 100_000;
 pub struct NavWorld {
     pub sections: HashMap<i64, Section>,
     /// The tiles loaded.
-    pub tiles: std::collections::HashSet<(i32, i32)>,
+    pub tiles: kenshi_io::det::HashSet<(i32, i32)>,
     /// (stand-in for Havok's face tree) the faces by GRID-metre cell (x, z) they overlap, with
     /// their bounds: what closest_point searches.
     pub(crate) grid: HashMap<(i32, i32), Vec<GridFace>>,
@@ -985,7 +986,7 @@ impl NavWorld {
     pub fn reachable(&self, from: FaceRef, to: FaceRef) -> bool {
         let start = (from.section, self.face(from).cluster as u32);
         let goal = (to.section, self.face(to).cluster as u32);
-        let mut seen = HashSet::from([start]);
+        let mut seen = [start].into_iter().collect::<HashSet<_>>();
         let mut stack = vec![start];
         while let Some(n) = stack.pop() {
             if n == goal {
@@ -1032,9 +1033,9 @@ impl NavWorld {
     ) -> Option<(Vec<Portal>, Vec<FaceRef>)> {
         let gated = !pass.ignore && self.barriers.iter().any(|b| b.shut);
         let mut open = BinaryHeap::new();
-        let mut best: HashMap<FaceRef, f32> = HashMap::from([(from, 0.0)]);
-        let mut point: HashMap<FaceRef, [f32; 3]> = HashMap::from([(from, start)]);
-        let mut parent: HashMap<FaceRef, (FaceRef, Portal)> = HashMap::new();
+        let mut best: HashMap<FaceRef, f32> = [(from, 0.0)].into_iter().collect();
+        let mut point: HashMap<FaceRef, [f32; 3]> = [(from, start)].into_iter().collect();
+        let mut parent: HashMap<FaceRef, (FaceRef, Portal)> = HashMap::default();
         open.push(Open {
             f: distance(start, goal),
             g: 0.0,
@@ -1412,7 +1413,7 @@ impl NavWorld {
     /// point `accept` takes: its point, and the face. Blocked faces are passed through.
     pub fn raycast(&self, origin: [f32; 3], dir: [f32; 3], max: f32, accept: &dyn Fn([f32; 3]) -> bool) -> Option<([f32; 3], FaceRef)> {
         let mut best: Option<(f32, FaceRef)> = None;
-        let mut seen: HashSet<FaceRef> = HashSet::new();
+        let mut seen: HashSet<FaceRef> = HashSet::default();
         let step = GRID * 0.5;
         let mut t = 0.0;
         while t <= max {

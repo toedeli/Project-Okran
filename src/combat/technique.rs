@@ -5,7 +5,7 @@
 
 use crate::WeaponCategory;
 use kenshi_data::GameData;
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 
 /// One hit of a technique.
 #[derive(Debug, Clone, Copy, PartialEq)]

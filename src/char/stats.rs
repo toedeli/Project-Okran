@@ -7,7 +7,7 @@
 //! ids T00029 StatsEnumerated.
 
 use crate::StatsEnumerated;
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 
 /// The cap every normal training curve uses (F047460).
 pub const STAT_CAP: f32 = 101.0;
@@ -206,7 +206,7 @@ pub fn stat_of_key(key: &str) -> Option<StatsEnumerated> {
 /// "stats bad<i>" (each a stat id, 0 none), 1 for the rest. They scale both the starting levels
 /// (F040461) and the XP each stat gains.
 pub fn race_multipliers(race: &kenshi_data::GameData) -> HashMap<StatsEnumerated, f32> {
-    let mut m = HashMap::new();
+    let mut m = HashMap::default();
     for (prefix, v) in [("stats good", 1.2f32), ("stats bad", 0.8)] {
         for i in 0.. {
             let Some(&id) = race.ints.get(&format!("{prefix}{i}")) else { break };
@@ -234,7 +234,7 @@ pub fn character_levels(
     rand: &mut dyn FnMut() -> f32,
 ) -> HashMap<StatsEnumerated, f32> {
     use StatsEnumerated::*;
-    let mut lv: HashMap<StatsEnumerated, f32> = HashMap::new();
+    let mut lv: HashMap<StatsEnumerated, f32> = HashMap::default();
     let stats = character.refs("stats").first().and_then(|(sid, _)| data.get(sid));
     match stats {
         Some(r) => {

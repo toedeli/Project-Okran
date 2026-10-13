@@ -7,7 +7,7 @@ use crate::Attacker;
 use crate::WeaponCategory;
 use kenshi_char::medical::lerp;
 use kenshi_data::GameData;
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 
 /// @type Weapon
 #[derive(Debug, Clone, PartialEq)]
@@ -128,7 +128,7 @@ pub fn set_weapon(
         human_damage_mult: 0.0,
         animal_damage_mult: 0.0,
         armour_penetration: 0.0,
-        race_damage: HashMap::new(),
+        race_damage: HashMap::default(),
         length: 0.0,
         category: WeaponCategory::SkillUnarmed,
     };

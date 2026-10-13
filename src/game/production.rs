@@ -371,7 +371,7 @@ impl Sim {
     /// The operators working at each operated building this tick (the first "max operators" of
     /// them by it), with their stat used.
     fn operators(&self) -> Vec<(usize, usize, Option<StatsEnumerated>)> {
-        let mut count: std::collections::HashMap<usize, u32> = std::collections::HashMap::new();
+        let mut count: kenshi_io::det::HashMap<usize, u32> = kenshi_io::det::HashMap::default();
         let mut out = Vec::new();
         for id in 0..self.folk.len() {
             let p = &self.folk[id];

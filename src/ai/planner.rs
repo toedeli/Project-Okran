@@ -13,7 +13,7 @@
 //! chain up to the goal becomes the plan (first task first).
 
 use crate::task_def::{DEFS, TaskDef, def};
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 
 /// Task types the redundancy check never drops (F037066): moving and running.
 const ALWAYS_NEW: [u16; 2] = [1, 0x43];
@@ -65,7 +65,7 @@ impl Repertoire {
 /// Tasks with +0x40 set are never solvers.
 /// @fn F039872
 pub fn solver_index(rep: Repertoire) -> HashMap<(u16, bool), Vec<u16>> {
-    let mut m: HashMap<(u16, bool), Vec<u16>> = HashMap::new();
+    let mut m: HashMap<(u16, bool), Vec<u16>> = HashMap::default();
     for d in DEFS.iter().filter(|d| rep.offers(d) && d.f40 == 0) {
         for &(c, expected, _) in d.done_when {
             m.entry((c, expected)).or_default().push(d.task);
@@ -519,7 +519,7 @@ mod tests {
 
     #[test]
     fn a_goal_whose_preconditions_hold_plans_itself() {
-        let mut a = Toy(HashMap::new());
+        let mut a = Toy(HashMap::default());
         let mut p = Planner::new(&mut a, Repertoire::Human);
         let plan = p.plan(29, 7, [0.0; 3]).unwrap();
         assert_eq!(plan.len(), 1);
@@ -529,7 +529,7 @@ mod tests {
     #[test]
     fn a_failing_precondition_is_solved_first() {
         // Move order (29) needs not crouching (24 false): crouching now
-        let mut a = Toy(HashMap::from([(24, true)]));
+        let mut a = Toy([(24, true)].into_iter().collect());
         let mut p = Planner::new(&mut a, Repertoire::Human);
         let solvers = solver_index(Repertoire::Human);
         let plan = p.plan(29, 7, [0.0; 3]).expect("a plan");

@@ -40,7 +40,7 @@
 use crate::sim::Sim;
 use kenshi_data::{GameData, GameDataContainer, ItemType};
 use kenshi_world::longpath::WorldGrid;
-use std::collections::{HashMap, HashSet};
+use kenshi_io::det::{HashMap, HashSet};
 use std::sync::Arc;
 
 /// Away squads' walking speed (units a second): an unloaded platoon walking to its target

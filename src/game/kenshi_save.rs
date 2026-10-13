@@ -161,7 +161,7 @@ pub fn read(dir: &Path) -> Result<KenshiSave, String> {
         if string(p, "faction name").as_deref() != Some(out.faction_name.as_str()) {
             // another squad: only its dead
             let Ok(f) = kenshi_io::fcs::read(&dir.join("platoon").join(format!("{id}.platoon"))) else { continue };
-            let by_id: std::collections::HashMap<&str, &Record> = f.records.iter().map(|r| (r.string_id.as_str(), r)).collect();
+            let by_id: kenshi_io::det::HashMap<&str, &Record> = f.records.iter().map(|r| (r.string_id.as_str(), r)).collect();
             for coll in f.records.iter().filter(|r| r.kind == INSTANCES) {
                 for inst in &coll.instances {
                     if inst.states.iter().filter_map(|s| by_id.get(s.as_str())).any(|r| r.kind == MEDICAL && boolean(r, "dead")) {
@@ -179,7 +179,7 @@ pub fn read(dir: &Path) -> Result<KenshiSave, String> {
             characters: Vec::new(),
         };
         let Ok(f) = kenshi_io::fcs::read(&dir.join("platoon").join(format!("{id}.platoon"))) else { continue };
-        let by_id: std::collections::HashMap<&str, &Record> = f.records.iter().map(|r| (r.string_id.as_str(), r)).collect();
+        let by_id: kenshi_io::det::HashMap<&str, &Record> = f.records.iter().map(|r| (r.string_id.as_str(), r)).collect();
         let Some(coll) = f.records.iter().find(|r| r.kind == INSTANCES) else { continue };
         for inst in &coll.instances {
             let states: Vec<&Record> = inst.states.iter().filter_map(|s| by_id.get(s.as_str()).copied()).collect();
@@ -246,7 +246,7 @@ pub fn read(dir: &Path) -> Result<KenshiSave, String> {
     if let Ok(zones) = std::fs::read_dir(dir.join("zone")) {
         for z in zones.flatten() {
             let Ok(f) = kenshi_io::fcs::read(&z.path()) else { continue };
-            let by_id: std::collections::HashMap<&str, &Record> = f.records.iter().map(|r| (r.string_id.as_str(), r)).collect();
+            let by_id: kenshi_io::det::HashMap<&str, &Record> = f.records.iter().map(|r| (r.string_id.as_str(), r)).collect();
             for coll in f.records.iter().filter(|r| r.kind == INSTANCES) {
                 for inst in &coll.instances {
                     let Some(st) = inst.states.iter().filter_map(|s| by_id.get(s.as_str())).find(|r| r.kind == BUILDING_STATE) else { continue };

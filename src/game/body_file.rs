@@ -5,7 +5,7 @@
 //! its "idle stance" (an ANIMATION's anim name). Read once each.
 
 use kenshi_data::GameDataContainer;
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 use std::sync::{Arc, Mutex};
 
 #[derive(Debug, Clone, Default)]
@@ -29,7 +29,7 @@ static FILES: Mutex<Option<HashMap<String, Option<Arc<BodyFile>>>>> = Mutex::new
 pub fn body_of(install: &std::path::Path, data: &GameDataContainer, character: &str) -> Option<Arc<BodyFile>> {
     let rel = data.get(character)?.files.get("body").filter(|f| !f.is_empty())?.clone();
     let mut cache = FILES.lock().ok()?;
-    let cache = cache.get_or_insert_with(HashMap::new);
+    let cache = cache.get_or_insert_with(HashMap::default);
     if let Some(b) = cache.get(&rel) {
         return b.clone();
     }

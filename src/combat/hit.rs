@@ -6,7 +6,7 @@
 
 use kenshi_char::medical::lerp;
 use kenshi_char::{BodyPart, Constants, Damage, Medical, Stats};
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 
 /// @type Armour
 ///
@@ -404,7 +404,7 @@ mod tests {
             pierce_reduction: 5.0,
             cut_into_stun: 0.5,
             material: 7,
-            coverage: HashMap::from([(0, 1.0)]),
+            coverage: [(0, 1.0)].into_iter().collect(),
         };
         let hit = Hit {
             cut: 40.0,

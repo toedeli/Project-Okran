@@ -4,7 +4,7 @@
 //! T00047 FactionRelations.
 
 use kenshi_data::GameData;
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 
 /// At or above this relation factions are allies.
 pub const ALLY_RELATION: f32 = 50.0;

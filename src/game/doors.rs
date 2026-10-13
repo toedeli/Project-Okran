@@ -193,7 +193,7 @@ impl Sim {
     /// The player's characters ordered to bash a door (BASH_DOOR_PLAYER_ORDER), and those whose
     /// way a gate shut who are hostile to its owner (F031240, F029386).
     fn bash_tick(&mut self, dt: f32, numbers: &[u32]) {
-        let owners: std::collections::HashMap<u32, String> = self.faction_numbers.iter().map(|(f, &n)| (n, f.clone())).collect();
+        let owners: kenshi_io::det::HashMap<u32, String> = self.faction_numbers.iter().map(|(f, &n)| (n, f.clone())).collect();
         for id in 0..self.folk.len() {
             let p = &self.folk[id];
             if p.dead || p.down {

@@ -187,7 +187,7 @@ const TICK: f32 = 1.0 / 60.0;
 const PICK_PX: f32 = 28.0;
 
 /// An animal kind's animation library and its skeleton's clip lengths.
-type AnimalAnims = (kenshi_anim::select::Library, HashMap<String, f32>);
+type AnimalAnims = (kenshi_anim::select::Library, kenshi_io::det::HashMap<String, f32>);
 
 #[derive(Resource)]
 struct Game {

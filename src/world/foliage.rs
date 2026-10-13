@@ -103,10 +103,10 @@ pub struct Foliage {
     pub meshes: Vec<FoliageMesh>,
     pub layers: Vec<FoliageLayer>,
     /// Per BIOMES record: its layers with meshes, in reference order.
-    pub biome_layers: std::collections::HashMap<String, Vec<usize>>,
+    pub biome_layers: kenshi_io::det::HashMap<String, Vec<usize>>,
     pub grass: Vec<Grass>,
     /// Per BIOMES record: its layers' grass, in reference order.
-    pub biome_grass: std::collections::HashMap<String, Vec<GrassUse>>,
+    pub biome_grass: kenshi_io::det::HashMap<String, Vec<GrassUse>>,
 }
 
 /// Ogre StringConverter::parseInt: the leading integer (0 when none).
@@ -124,12 +124,12 @@ fn parse_int(s: &str) -> i32 {
 impl Foliage {
     pub fn load(data: &GameDataContainer) -> Foliage {
         let mut f = Foliage::default();
-        let mut mesh_index: std::collections::HashMap<String, usize> = Default::default();
+        let mut mesh_index: kenshi_io::det::HashMap<String, usize> = Default::default();
         fn mesh_of(
             data: &GameDataContainer,
             r: &GameData,
             f: &mut Foliage,
-            index: &mut std::collections::HashMap<String, usize>,
+            index: &mut kenshi_io::det::HashMap<String, usize>,
             depth: u32,
         ) -> usize {
             if let Some(&i) = index.get(&r.string_id) {
@@ -172,8 +172,8 @@ impl Foliage {
             }
             i
         }
-        let mut layer_index: std::collections::HashMap<String, usize> = Default::default();
-        let mut grass_index: std::collections::HashMap<String, usize> = Default::default();
+        let mut layer_index: kenshi_io::det::HashMap<String, usize> = Default::default();
+        let mut grass_index: kenshi_io::det::HashMap<String, usize> = Default::default();
         for biome in data.of_type(ItemType::Biomes) {
             let mut list = Vec::new();
             let mut grass = Vec::new();

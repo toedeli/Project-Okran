@@ -6,7 +6,7 @@
 //! types T00045 SubjectiveTags, T00046 PlatoonMemory, T00041 / T00042 the tag enums.
 
 use crate::{PerceptionLongTerm, PerceptionShortTerm};
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 use std::hash::Hash;
 
 /// A set of tags as one bitmask (TagsClass).

@@ -1,0 +1,19 @@
+[package]
+name = "kenshi-net"
+version = "0.1.0"
+description = "Multiplayer over the engine-free simulation: lockstep orders or server snapshots, over TCP"
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+path = "lib.rs"
+
+[[bin]]
+name = "okran-net"
+path = "bin/okran_net.rs"
+
+[dependencies]
+kenshi-game = { path = "../game", default-features = false }
+kenshi-combat = { path = "../combat" }
+clap = { version = "4.6.7", features = ["derive"] }

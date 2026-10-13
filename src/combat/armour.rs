@@ -7,7 +7,7 @@ use crate::hit::Armour;
 use crate::{ArmourClass, ArmourType};
 use kenshi_char::medical::lerp;
 use kenshi_data::GameData;
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 
 /// One row of the material tables (by [`ArmourType`]).
 #[derive(Debug, Clone, Copy, PartialEq)]

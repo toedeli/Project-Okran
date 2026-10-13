@@ -22,7 +22,7 @@
 
 use kenshi_data::{GameDataContainer, ItemType};
 use kenshi_world::town::Town;
-use std::collections::HashMap;
+use kenshi_io::det::HashMap;
 
 /// Town record -> (item record, gear?, count, quality) given to it.
 pub type Handout = HashMap<String, Vec<(String, bool, i32, f32)>>;
@@ -111,7 +111,7 @@ impl ArtTown {
 ///
 /// The handout for the world's towns.
 pub fn distribute(data: &GameDataContainer, towns: &[Town]) -> Handout {
-    let mut out = Handout::new();
+    let mut out = Handout::default();
     let Some(list) = data.of_type(ItemType::Artifacts).next() else { return out };
     // the artifacts: items and gear
     let mut items: Vec<Art> = Vec::new();
