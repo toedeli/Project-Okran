@@ -1,0 +1,24 @@
+[package]
+name = "kenshi-convert"
+version = "0.1.0"
+description = "Converts Kenshi's formats from the player's own install into modern, editable ones (text data, KTX2 and PNG textures, glTF, 16-bit heightmaps)"
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+path = "lib.rs"
+
+[[bin]]
+name = "okran-convert"
+path = "bin/okran_convert.rs"
+
+[dependencies]
+kenshi-io = { path = "../io" }
+kenshi-data = { path = "../data" }
+serde_json = { version = "1.0.154", features = ["float_roundtrip", "preserve_order"] }
+clap = { version = "4.6.7", features = ["derive"] }
+image = { version = "0.25", default-features = false, features = ["png"] }
+zstd = "0.14.2"
+kenshi-anim = { path = "../anim" }
+glam = "0.32.1"

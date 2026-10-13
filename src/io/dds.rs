@@ -161,24 +161,29 @@ pub fn decode(buf: &[u8]) -> Result<Rgba, Error> {
                 }
             }
         }
-    } else if pf_flags & 0x40 != 0 && u32_at(buf, 88) == 32 {
-        // uncompressed 32-bit, channel order from the masks
+    } else if pf_flags & 0x40 != 0 && matches!(u32_at(buf, 88), 16 | 24 | 32) {
+        // uncompressed 16, 24 or 32-bit, channel order and width from the masks, each channel
+        // scaled to 8 bits (exact for 8-bit channels)
+        let bytes = (u32_at(buf, 88) / 8) as usize;
         let masks = [
             u32_at(buf, 92),
             u32_at(buf, 96),
             u32_at(buf, 100),
             u32_at(buf, 104),
         ];
-        if data.len() < w * h * 4 {
+        if data.len() < w * h * bytes {
             return Err(Error::Truncated);
         }
-        for (px, raw) in pixels.iter_mut().zip(data.as_chunks::<4>().0) {
-            let v = u32::from_le_bytes(*raw);
+        for (px, raw) in pixels.iter_mut().zip(data.chunks_exact(bytes)) {
+            let mut le = [0u8; 4];
+            le[..bytes].copy_from_slice(raw);
+            let v = u32::from_le_bytes(le);
             for (c, m) in masks.iter().enumerate() {
                 px[c] = if *m == 0 {
                     255
                 } else {
-                    ((v & m) >> m.trailing_zeros()) as u8
+                    let top = (1u64 << m.count_ones()) - 1;
+                    ((((v & m) >> m.trailing_zeros()) as u64 * 255 + top / 2) / top) as u8
                 };
             }
         }
@@ -210,6 +215,31 @@ mod tests {
         b[80..84].copy_from_slice(&4u32.to_le_bytes());
         b[84..88].copy_from_slice(fourcc);
         b
+    }
+
+    fn uncompressed(bits: u32, masks: [u32; 4]) -> Vec<u8> {
+        let mut b = header(2, 1, b"\0\0\0\0");
+        b[80..84].copy_from_slice(&0x40u32.to_le_bytes());
+        b[88..92].copy_from_slice(&bits.to_le_bytes());
+        for (k, m) in masks.iter().enumerate() {
+            b[92 + 4 * k..96 + 4 * k].copy_from_slice(&m.to_le_bytes());
+        }
+        b
+    }
+
+    #[test]
+    fn uncompressed_24_and_16_bit() {
+        // BGR 24-bit: blue, then a mid grey
+        let mut b = uncompressed(24, [0xff0000, 0xff00, 0xff, 0]);
+        b.extend([255, 0, 0, 128, 128, 128]);
+        let img = decode(&b).unwrap();
+        assert_eq!(img.pixels, vec![[0, 0, 255, 255], [128, 128, 128, 255]]);
+        // R5G6B5: pure green, then white
+        let mut b = uncompressed(16, [0xf800, 0x07e0, 0x001f, 0]);
+        b.extend(0x07e0u16.to_le_bytes());
+        b.extend(0xffffu16.to_le_bytes());
+        let img = decode(&b).unwrap();
+        assert_eq!(img.pixels, vec![[0, 255, 0, 255], [255, 255, 255, 255]]);
     }
 
     #[test]

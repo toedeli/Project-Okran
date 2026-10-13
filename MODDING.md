@@ -87,6 +87,11 @@ A script hooks the game by defining a function with the hook's name. There is on
 
 `src/mods/scripts/headshots.lua` is an example: head hits do three times the damage.
 
+Scripts run in a sandbox, so a mod can't harm the player's machine or desync a multiplayer game:
+they get Lua's `table`, `string`, `math`, `utf8` and `coroutine` libraries, without `io`, `os`,
+`package`, `debug`, `require`, `dofile`, `loadfile`, `math.random` or bytecode. A script may use
+64 MB, and one that runs too long is stopped and switched off.
+
 ## 3. Changing the code
 
 Everything is in this repository, in Rust with [Bevy](https://bevyengine.org). Fork it, change it
