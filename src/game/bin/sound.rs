@@ -158,7 +158,8 @@ impl Sound {
             music_next: 0.0,
             music_until: -1.0e9,
             in_world: false,
-            enabled: std::env::var("KENSHI_NO_SOUND").is_err(),
+            // a test run (`--shot`) is silent, so an unattended one never plays out loud
+            enabled: std::env::var("KENSHI_NO_SOUND").is_err() && !std::env::args().any(|a| a == "--shot"),
             cur_tag: None,
             stops: Vec::new(),
         };
